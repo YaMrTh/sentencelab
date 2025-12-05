@@ -1,1 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SentenceLab</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar__nav">
+      <a href="#sentence-generator" class="nav__item active" data-target="sentence-generator">Sentence Generator</a>
+      <a href="#settings" class="nav__item" data-target="settings">Settings</a>
+    </nav>
+  </aside>
+
+  <div class="page">
+    <header class="header">
+      <button class="icon-button header__menu" id="menuToggle" aria-label="Open navigation">
+        <span class="hamburger"></span>
+      </button>
+      <div class="header__title">SentenceLab</div>
+      <div class="header__profile">
+        <div class="avatar" aria-hidden="true">YN</div>
+        <span class="username">Yann</span>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- Sentence Generator Page -->
+      <section class="page-section" id="sentence-generator" aria-labelledby="sg-heading">
+        <div class="tile">
+          <div class="tile__header">
+            <h2 class="tile__title" id="sg-heading">Generate Sentences</h2>
+          </div>
+          <div class="filters" id="generatorFilters">
+            <div class="form-control">
+              <label for="tagSelect">Tag (context)</label>
+              <select id="tagSelect">
+                <option value="">Loading tags...</option>
+              </select>
+            </div>
+            <div class="form-control">
+              <label for="subTagSelect">Sub Tag</label>
+              <select id="subTagSelect" disabled>
+                <option value="">Select a tag first</option>
+              </select>
+            </div>
+            <div class="form-control">
+              <label for="politenessSelect">Politeness</label>
+              <select id="politenessSelect">
+                <option value="">Any</option>
+                <option value="plain">Plain</option>
+                <option value="polite">Polite</option>
+                <option value="honorific">Honorific</option>
+              </select>
+            </div>
+            <div class="form-control">
+              <label for="difficultySelect">Difficulty</label>
+              <select id="difficultySelect">
+                <option value="">Any</option>
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+              </select>
+            </div>
+            <div class="form-control">
+              <label for="jlptSelect">JLPT</label>
+              <select id="jlptSelect">
+                <option value="">Any</option>
+                <option value="N5">N5</option>
+                <option value="N4">N4</option>
+                <option value="N3">N3</option>
+                <option value="N2">N2</option>
+                <option value="N1">N1</option>
+              </select>
+            </div>
+            <button class="button button--primary" id="generateButton">Generate</button>
+          </div>
+
+          <div class="generated">
+            <div class="generated__header">
+              <h3 class="generated__title">Sentences</h3>
+              <p class="generated__hint" id="generatedHint">
+                Choose filters and click Generate to create sentences.
+              </p>
+            </div>
+            <ul class="generated__list" id="generatedList">
+              <li class="empty" id="generatedEmptyState">
+                No sentences yet. Choose filters and click Generate.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tile">
+          <div class="tile__header">
+            <h2 class="tile__title">Sentence</h2>
+          </div>
+          <div class="sentence-card">
+            <div class="sentence" id="sentenceDisplay">
+              <!-- words inserted by app.js -->
+            </div>
+            <div class="sentence-actions">
+              <button class="button button--ghost" id="favoriteButton" aria-pressed="false" title="Toggle favorite">❤️</button>
+              <button class="button button--secondary" id="rollButton">🎲 Roll</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings Page -->
+      <section class="page-section hidden" id="settings" aria-labelledby="settings-heading">
+        <h1 class="sr-only" id="settings-heading">Settings</h1>
+
+        <!-- Vocabulary -->
+        <div class="tile" id="vocabulary">
+          <div class="tile__header">
+            <h2 class="tile__title">Vocabulary</h2>
+            <div class="tile__actions">
+              <button class="button button--secondary" id="vocabNewButton" disabled>New</button>
+              <button class="button button--ghost" id="vocabDeleteButton" disabled>Delete</button>
+              <button class="button button--primary" id="vocabImportButton" disabled>Import</button>
+            </div>
+          </div>
+          <div class="filters filters--compact">
+            <select aria-label="Topic" id="vocabTopicFilter">
+              <option value="">Topic (any)</option>
+            </select>
+            <select aria-label="Subtopic" id="vocabSubtopicFilter">
+              <option value="">Subtopic (any)</option>
+            </select>
+            <select aria-label="Politeness" id="vocabPolitenessFilter">
+              <option value="">Politeness (any)</option>
+              <option value="plain">Plain</option>
+              <option value="polite">Polite</option>
+              <option value="honorific">Honorific</option>
+            </select>
+            <select aria-label="JLPT Level" id="vocabJlptFilter">
+              <option value="">JLPT (any)</option>
+              <option value="N5">N5</option>
+              <option value="N4">N4</option>
+              <option value="N3">N3</option>
+              <option value="N2">N2</option>
+              <option value="N1">N1</option>
+            </select>
+            <select aria-label="Difficulty" id="vocabDifficultyFilter">
+              <option value="">Difficulty (any)</option>
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
+            </select>
+          </div>
+          <div class="table" role="table">
+            <div class="table__row table__header" role="row">
+              <div class="table__cell"><input type="checkbox" aria-label="Select all" disabled /></div>
+              <div class="table__cell">Word / Phrase</div>
+              <div class="table__cell">Topic / Subtopic</div>
+              <div class="table__cell">Difficulty</div>
+              <div class="table__cell">Last Updated</div>
+            </div>
+            <div id="vocabTableBody">
+              <!-- rows injected by app.js -->
+            </div>
+          </div>
+          <div class="pagination">
+            <div class="pagination__info" id="vocabPaginationInfo">
+              Loading...
+            </div>
+            <div class="pagination__nav">
+              <button class="icon-button pagination__button" data-tile="vocabulary" data-dir="prev" aria-label="Previous page">◀</button>
+              <span class="pagination__page" id="vocabPaginationPage">1 / 1</span>
+              <button class="icon-button pagination__button" data-tile="vocabulary" data-dir="next" aria-label="Next page">▶</button>
+              <button class="icon-button pagination__full" data-tile="vocabulary" aria-label="Open full vocabulary list" title="Open full list">🔗</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sentence Templates -->
+        <div class="tile" id="sentence-templates">
+          <div class="tile__header">
+            <h2 class="tile__title">Sentence Templates</h2>
+            <div class="tile__actions">
+              <button class="button button--secondary" id="templatesNewButton" disabled>New</button>
+              <button class="button button--ghost" id="templatesDeleteButton" disabled>Delete</button>
+              <button class="button button--primary" id="templatesImportButton" disabled>Import</button>
+            </div>
+          </div>
+          <div class="filters filters--compact">
+            <select aria-label="Tag" id="templatesTagFilter">
+              <option value="">Tag (any)</option>
+            </select>
+            <select aria-label="Subtag" id="templatesSubTagFilter">
+              <option value="">Subtag (any)</option>
+            </select>
+          </div>
+          <div class="table" role="table">
+            <div class="table__row table__header" role="row">
+              <div class="table__cell"><input type="checkbox" aria-label="Select all" disabled /></div>
+              <div class="table__cell">Pattern</div>
+              <div class="table__cell">Description</div>
+              <div class="table__cell">Active</div>
+              <div class="table__cell">Last Updated</div>
+            </div>
+            <div id="templatesTableBody">
+              <!-- rows injected by app.js -->
+            </div>
+          </div>
+          <div class="pagination">
+            <div class="pagination__info" id="templatesPaginationInfo">
+              Loading...
+            </div>
+            <div class="pagination__nav">
+              <button class="icon-button pagination__button" data-tile="sentence-templates" data-dir="prev" aria-label="Previous page">◀</button>
+              <span class="pagination__page" id="templatesPaginationPage">1 / 1</span>
+              <button class="icon-button pagination__button" data-tile="sentence-templates" data-dir="next" aria-label="Next page">▶</button>
+              <button class="icon-button pagination__full" data-tile="sentence-templates" aria-label="Open full sentence templates" title="Open full list">🔗</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slot Template -->
+        <div class="tile" id="slot-template">
+          <div class="tile__header">
+            <h2 class="tile__title">Slot Template</h2>
+            <div class="tile__actions">
+              <button class="button button--secondary" id="slotsNewButton" disabled>New</button>
+              <button class="button button--ghost" id="slotsDeleteButton" disabled>Delete</button>
+              <button class="button button--primary" id="slotsImportButton" disabled>Import</button>
+            </div>
+          </div>
+          <div class="table" role="table">
+            <div class="table__row table__header" role="row">
+              <div class="table__cell"><input type="checkbox" aria-label="Select all" disabled /></div>
+              <div class="table__cell">Slot Name</div>
+              <div class="table__cell">Grammatical Role</div>
+              <div class="table__cell">Part of Speech</div>
+              <div class="table__cell">Template</div>
+            </div>
+            <div id="slotsTableBody">
+              <!-- rows injected by app.js -->
+            </div>
+          </div>
+          <div class="pagination">
+            <div class="pagination__info" id="slotsPaginationInfo">
+              Slot data comes from selected template(s).
+            </div>
+          </div>
+        </div>
+
+        <!-- Tags and Mapping -->
+        <div class="tile" id="tags-mapping">
+          <div class="tile__header">
+            <h2 class="tile__title">Tags and Mapping</h2>
+            <div class="tile__actions">
+              <button class="button button--secondary" id="tagsNewButton" disabled>New</button>
+              <button class="button button--ghost" id="tagsDeleteButton" disabled>Delete</button>
+              <button class="button button--primary" id="tagsImportButton" disabled>Import</button>
+            </div>
+          </div>
+          <div class="table" role="table">
+            <div class="table__row table__header" role="row">
+              <div class="table__cell"><input type="checkbox" aria-label="Select all" disabled /></div>
+              <div class="table__cell">Tag</div>
+              <div class="table__cell">Sub Tag Of</div>
+              <div class="table__cell">Mapped To</div>
+              <div class="table__cell">Notes</div>
+            </div>
+            <div id="tagsMappingTableBody">
+              <!-- rows injected by app.js -->
+            </div>
+          </div>
+          <div class="pagination">
+            <div class="pagination__info" id="tagsMappingPaginationInfo">
+              All mappings loaded at once.
+            </div>
+          </div>
+        </div>
+
+        <!-- Sentence Library -->
+        <div class="tile" id="sentence-library">
+          <div class="tile__header">
+            <h2 class="tile__title">Sentence Library</h2>
+            <div class="tile__actions">
+              <button class="button button--secondary" id="libraryNewButton" disabled>New</button>
+              <button class="button button--ghost" id="libraryDeleteButton" disabled>Delete</button>
+              <button class="button button--primary" id="libraryImportButton" disabled>Import</button>
+            </div>
+          </div>
+          <div class="filters filters--compact">
+            <select aria-label="Tag" id="libraryTagFilter">
+              <option value="">Tag (any)</option>
+            </select>
+            <select aria-label="Sub Tag" id="librarySubTagFilter">
+              <option value="">Sub Tag (any)</option>
+            </select>
+            <select aria-label="Politeness" id="libraryPolitenessFilter">
+              <option value="">Politeness (any)</option>
+              <option value="plain">Plain</option>
+              <option value="polite">Polite</option>
+              <option value="honorific">Honorific</option>
+              <option value="Mixed">Mixed</option>
+            </select>
+            <select aria-label="Difficulty" id="libraryDifficultyFilter">
+              <option value="">Difficulty (any)</option>
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
+            </select>
+          </div>
+          <div class="table" role="table">
+            <div class="table__row table__header" role="row">
+              <div class="table__cell"><input type="checkbox" aria-label="Select all" disabled /></div>
+              <div class="table__cell">Sentence</div>
+              <div class="table__cell">Tag</div>
+              <div class="table__cell">Politeness</div>
+              <div class="table__cell">Difficulty</div>
+              <div class="table__cell">Favorite</div>
+            </div>
+            <div id="sentenceLibraryTableBody">
+              <!-- rows injected by app.js -->
+            </div>
+          </div>
+          <div class="pagination">
+            <div class="pagination__info" id="libraryPaginationInfo">
+              Loading...
+            </div>
+            <div class="pagination__nav">
+              <button class="icon-button pagination__button" data-tile="sentence-library" data-dir="prev" aria-label="Previous page">◀</button>
+              <span class="pagination__page" id="libraryPaginationPage">1 / 1</span>
+              <button class="icon-button pagination__button" data-tile="sentence-library" data-dir="next" aria-label="Next page">▶</button>
+              <button class="icon-button pagination__full" data-tile="sentence-library" aria-label="Open full sentence library" title="Open full list">🔗</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
 
